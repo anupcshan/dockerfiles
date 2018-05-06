@@ -3,11 +3,13 @@ FROM openjdk:8-jdk-alpine AS bazel_builder
 RUN apk add --no-cache build-base python zip wget bash \
     linux-headers # To pull in linux/futex.h
 
+ENV BAZEL_VERSION 0.13.0
+
 RUN set -eux; \
-    wget https://github.com/bazelbuild/bazel/releases/download/0.12.0/bazel-0.12.0-dist.zip; \
+    wget https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-$BAZEL_VERSION-dist.zip; \
     mkdir /bazel; \
-    unzip -q bazel-0.12.0-dist.zip -d /bazel; \
-    rm -f bazel-0.12.0-dist.zip
+    unzip -q bazel-$BAZEL_VERSION-dist.zip -d /bazel; \
+    rm -f bazel-$BAZEL_VERSION-dist.zip
 ENV JAVA_VERSION 1.8
 
 WORKDIR /bazel
