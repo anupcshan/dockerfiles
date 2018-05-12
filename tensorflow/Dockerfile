@@ -12,6 +12,10 @@ WORKDIR tensorflow/tensorflow-$TENSORFLOW_VERSION
 # To work around musl issues
 RUN sed -i '452 s/^\(.*\)$/linkopts = ["-lexecinfo"],\1/' tensorflow/BUILD
 
+# Fix "undefined reference to `png_init_filter_functions_neon'".
+# See https://github.com/opencv/opencv/issues/7600 for more details. This is only required to unbreak builds on ARMv8.
+RUN sed -i '9 s/^\(.*\)$/defines = ["PNG_ARM_NEON_OPT=0"],\1/' third_party/png.BUILD
+
 ARG remote_http_cache
 RUN set -eux; \
     # Verbose logging. Most of the later compile/link steps use a lot of memory (~2GB each). \
