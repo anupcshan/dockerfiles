@@ -26,18 +26,19 @@ RUN set -eux; \
     export BAZEL_ARGS; \
     bazel build $BAZEL_ARGS //tensorflow:libtensorflow.so
 
-RUN mkdir /out
+RUN mkdir -p /out/lib /out/include/tensorflow/c/
 # TODO(anupcshan): Ideally, we'll script the list of libraries to be copied over. For now, this is fine.
 RUN cp bazel-bin/tensorflow/libtensorflow.so \
        bazel-bin/tensorflow/libtensorflow_framework.so \
        /usr/lib/libstdc++.so.6 \
        /usr/lib/libgcc_s.so.1 \
        /usr/lib/libexecinfo.so.1 \
-       /out
+       /out/lib
+RUN cp tensorflow/c/c_api.h /out/include/tensorflow/c/
 
 # RUN curl -o /tmp/inception.zip https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip \
 #     && unzip /tmp/inception.zip -d /tmp/inception \
 #     && rm /tmp/inception.zip
 
 FROM alpine:3.7
-COPY --from=tflow_build /out /usr/local/lib
+COPY --from=tflow_build /out/ /usr/local/
