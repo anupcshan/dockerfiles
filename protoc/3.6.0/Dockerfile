@@ -10,13 +10,13 @@ RUN go get -u -v -ldflags '-w -s' \
 
 FROM alpine:3.7 as protoc_builder
 RUN apk add --no-cache build-base wget unzip automake autoconf libtool
-ENV PROTOC_VERSION 3.5.1
+ENV PROTOC_VERSION 3.6.0
 RUN set -eux; \
-    wget -O /tmp/protoc.zip https://github.com/google/protobuf/releases/download/v3.5.1/protobuf-cpp-3.5.1.zip; \
-    echo "706ac3cbd4504f34c5b991e1b4567e35d7fa883c417e1644de594a169e193af8  /tmp/protoc.zip" | sha256sum -c -; \
+    wget -O /tmp/protoc.zip https://github.com/google/protobuf/releases/download/v$PROTOC_VERSION/protobuf-cpp-$PROTOC_VERSION.zip; \
+    echo "50873796cabf7e97b7879f78a19c5dc26069136f2df32aeb5ce3bfea987870bb  /tmp/protoc.zip" | sha256sum -c -; \
     unzip -q /tmp/protoc.zip -d /tmp/protoc; \
     rm /tmp/protoc.zip
-WORKDIR /tmp/protoc/protobuf-3.5.1
+WORKDIR /tmp/protoc/protobuf-$PROTOC_VERSION
 RUN set -eux; autoreconf -f -i -Wall,no-obsolete; ./configure --prefix=/usr --enable-static=no; make -j4; make install DESTDIR=/out
 
 
