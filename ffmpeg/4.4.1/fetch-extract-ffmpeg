@@ -1,0 +1,23 @@
+#!/bin/sh -eux
+
+case $(uname -m) in
+  x86_64)
+    url=https://www.johnvansickle.com/ffmpeg/old-releases/ffmpeg-4.4.1-amd64-static.tar.xz
+    ;;
+
+  aarch64)
+    url=https://www.johnvansickle.com/ffmpeg/old-releases/ffmpeg-4.4.1-arm64-static.tar.xz
+    ;;
+
+  armv7l)
+    url=https://www.johnvansickle.com/ffmpeg/old-releases/ffmpeg-4.4.1-armhf-static.tar.xz
+    ;;
+
+  *)
+    echo "Unknown architecture" $(uname -m)
+    exit 1
+    ;;
+esac
+
+mkdir /ffmpeg
+curl -k -vv $url | tar --strip-components=1 -C /ffmpeg -xvJ
